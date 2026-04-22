@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  ecourses:
+    image: thomasaawaddockerest/ecourses_web-fe:latest
+    ports:
+      - "5000:5000"
+      - "80:80"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 3
+        failure_action: rollback
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - 55edbb4292eda0e213219c81255a3b87fce874a26991b19d4aa5d53fa4cd5c99
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
